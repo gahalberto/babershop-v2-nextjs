@@ -4,13 +4,23 @@ import { Button } from "./_components/ui/button"
 import { Card, CardContent } from "./_components/ui/card"
 import { Input } from "./_components/ui/input"
 import Image from "next/image"
-import { Badge } from "./_components/ui/badge"
-import { Avatar, AvatarImage } from "./_components/ui/avatar"
 import { db } from "./_lib/prisma"
 import BarbershopItem from "./_components/barbershop-item"
+import { quickSearchOptions } from "./_constants/search"
+import BookingItem from "./_components/booking-item"
+
+interface quickSearchOptions {
+  imageUrl: string
+  title: string
+}
 
 const Home = async () => {
   const babershops = await db.barbershop.findMany({})
+  const popularbabrshops = await db.barbershop.findMany({
+    orderBy: {
+      name: "desc",
+    },
+  })
 
   return (
     <>
@@ -26,6 +36,14 @@ const Home = async () => {
             <SearchIcon />
           </Button>
         </div>
+        <div className="mt-6 flex gap-3 overflow-scroll [&::-webkit-scrollbar]:hidden">
+          {quickSearchOptions.map((item) => (
+            <Button key={item.title} className="gap-2">
+              <Image src={item.imageUrl} width={16} height={16} alt="Cabelo" />
+              {item.title}
+            </Button>
+          ))}
+        </div>
 
         <div className="relative mt-6 h-[150px] w-full">
           <Image
@@ -36,39 +54,34 @@ const Home = async () => {
           />
         </div>
 
-        <h2 className="mb-3 mt-6 text-xs font-bold uppercase text-gray-400">
-          Agendamentos
-        </h2>
-
-        <Card className="mt-6">
-          <CardContent className="flex justify-between p-0">
-            <div className="flex flex-col gap-2 py-5 pl-5">
-              <Badge className="w-fit">Confirmado</Badge>
-              <h3 className="font-semibold">Corte de Cabelo</h3>
-              <div className="flex items-center">
-                <Avatar className="h-6 w-6">
-                  <AvatarImage src="https://utfs.io/f/c97a2dc9-cf62-468b-a851-bfd2bdde775f-16p.png" />
-                </Avatar>
-                <p className="text-sm">Barbeária FSW</p>
-              </div>
-            </div>
-            <div className="flex flex-col items-center justify-center border-l-2 border-solid px-5">
-              <p className="text-sm">Agosto</p>
-              <p className="text-2xl">05</p>
-              <p className="text-sm">20:00</p>
-            </div>
-          </CardContent>
-        </Card>
+        <BookingItem />
 
         <h2 className="mb-3 mt-6 text-xs font-bold uppercase text-gray-400">
           Recomendados
         </h2>
-        <div className="flex gap-4 overflow-auto">
+        <div className="flex gap-4 overflow-auto [&::-webkit-scrollbar]:hidden">
           {babershops.map((babershop) => (
             <BarbershopItem key={babershop.id} babershop={babershop} />
           ))}
         </div>
+
+        <h2 className="mb-3 mt-6 text-xs font-bold uppercase text-gray-400">
+          Populadores
+        </h2>
+        <div className="flex gap-4 overflow-auto [&::-webkit-scrollbar]:hidden">
+          {popularbabrshops.map((babershop) => (
+            <BarbershopItem key={babershop.id} babershop={babershop} />
+          ))}
+        </div>
       </div>
+      <Card className="">
+        <CardContent className="px-5 py-6">
+          <p className="text-sm text-gray-400">
+            2024 - Made by
+            <span className="font-bold"> Gabriel Alberto</span>
+          </p>
+        </CardContent>
+      </Card>
     </>
   )
 }

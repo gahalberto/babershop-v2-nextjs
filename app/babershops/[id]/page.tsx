@@ -1,3 +1,4 @@
+import PhoneItem from "@/app/_components/phone-item"
 import ServiceItem from "@/app/_components/serrvice-item"
 import { Button } from "@/app/_components/ui/button"
 import { db } from "@/app/_lib/prisma"
@@ -22,6 +23,7 @@ const BabershopPage = async ({ params }: BaberShopProps) => {
     },
   })
   if (!babershop) notFound()
+
 
   return (
     <div>
@@ -62,13 +64,19 @@ const BabershopPage = async ({ params }: BaberShopProps) => {
         <p className="text-justify text-sm">{babershop?.description}</p>
       </div>
 
-      <div className="space-y-3 p-5">
+      <div className="space-y-3 border-b border-solid p-5">
         <h2 className="font-bold uppercase text-gray-400">Serviços</h2>
         <div className="space-y-3">
           {babershop.services.map((service) => (
             <ServiceItem key={service.id} service={service} />
           ))}
         </div>
+      </div>
+
+      <div className="p-5">
+        {babershop.phones.map((phone) => (
+          <PhoneItem  key={phone} phone={phone} />
+))}
       </div>
     </div>
   )

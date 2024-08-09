@@ -1,7 +1,6 @@
 import { SearchIcon } from "lucide-react"
 import Header from "./_components/header"
 import { Button } from "./_components/ui/button"
-import { Card, CardContent } from "./_components/ui/card"
 import { Input } from "./_components/ui/input"
 import Image from "next/image"
 import { db } from "./_lib/prisma"
@@ -74,14 +73,6 @@ const Home = async () => {
           ))}
         </div>
       </div>
-      <Card className="">
-        <CardContent className="px-5 py-6">
-          <p className="text-sm text-gray-400">
-            2024 - Made by
-            <span className="font-bold"> Gabriel Alberto</span>
-          </p>
-        </CardContent>
-      </Card>
     </>
   )
 }

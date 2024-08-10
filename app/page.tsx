@@ -1,12 +1,11 @@
-import { SearchIcon } from "lucide-react"
 import Header from "./_components/header"
 import { Button } from "./_components/ui/button"
-import { Input } from "./_components/ui/input"
 import Image from "next/image"
 import { db } from "./_lib/prisma"
 import BarbershopItem from "./_components/barbershop-item"
 import { quickSearchOptions } from "./_constants/search"
 import BookingItem from "./_components/booking-item"
+import Search from "./_components/search"
 
 interface quickSearchOptions {
   imageUrl: string
@@ -29,12 +28,10 @@ const Home = async () => {
         <h2 className="text-xl font-bold">Olá, Gabriel!</h2>
         <p>Quarta-feira, 5 de agosto</p>
 
-        <div className="mt-6 flex items-center gap-2">
-          <Input placeholder="Faça a sua busca!" />
-          <Button>
-            <SearchIcon />
-          </Button>
+        <div className="mt-6">
+          <Search />
         </div>
+
         <div className="mt-6 flex gap-3 overflow-scroll [&::-webkit-scrollbar]:hidden">
           {quickSearchOptions.map((item) => (
             <Button key={item.title} className="gap-2">

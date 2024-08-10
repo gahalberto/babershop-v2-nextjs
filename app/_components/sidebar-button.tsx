@@ -1,9 +1,11 @@
+"use client"
+
 import { Button } from "./ui/button"
 import { CalendarIcon, HomeIcon, LogInIcon, LogOutIcon } from "lucide-react"
 import { SheetContent, SheetHeader, SheetTitle } from "./ui/sheet"
 import { quickSearchOptions } from "../_constants/search"
-// import { Avatar } from "./ui/avatar"
-// import { AvatarImage } from "@radix-ui/react-avatar"
+import { Avatar } from "./ui/avatar"
+import { AvatarImage } from "@radix-ui/react-avatar"
 import Image from "next/image"
 import Link from "next/link"
 import {
@@ -14,8 +16,12 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "./ui/dialog"
+import { signIn, useSession } from "next-auth/react"
 
 const SiderbarButton = () => {
+  const { data } = useSession()
+  const handleLoginWithGoogleClick = async () => await signIn("google")
+
   return (
     <SheetContent className="overflow-auto">
       <SheetHeader>
@@ -23,34 +29,44 @@ const SiderbarButton = () => {
       </SheetHeader>
 
       <div className="flex items-center justify-between gap-3 border-b border-solid py-5">
-        <h2 className="text-lg font-bold">Olá, faça o seu login!</h2>
-        <Dialog>
-          <DialogTrigger asChild>
-            <Button size={"icon"}>
-              <LogInIcon />
-            </Button>
-          </DialogTrigger>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>Faça seu login na plataforma</DialogTitle>
-              <DialogDescription>
-                Conecte-se usando sua conta do Google.
-              </DialogDescription>
-            </DialogHeader>
-            <Button variant={"outline"} className="gap-1 font-bold">
-              Google
-            </Button>
-          </DialogContent>
-        </Dialog>
-        {/* <Avatar>
-                    <AvatarImage src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=1287&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" />
-                </Avatar>
+        {data?.user ? (
+          <div className="flex items-center gap-2">
+            <Avatar>
+              <AvatarImage src={data.user.image || undefined} />
+            </Avatar>
 
-                <div className="">
-                    <p className="font-bold">Gabriel Alberto</p>
-                    <p className="text-sm">gahalberto@icloud.com</p>
-                </div>
- */}
+            <div className="">
+              <p className="font-bold">{data.user.name}</p>
+              <p className="text-sm">{data.user.email}</p>
+            </div>
+          </div>
+        ) : (
+          <>
+            <h2 className="text-lg font-bold">Olá, faça o seu login!</h2>
+            <Dialog>
+              <DialogTrigger asChild>
+                <Button size={"icon"}>
+                  <LogInIcon />
+                </Button>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>Faça seu login na plataforma</DialogTitle>
+                  <DialogDescription>
+                    Conecte-se usando sua conta do Google.
+                  </DialogDescription>
+                </DialogHeader>
+                <Button
+                  variant={"outline"}
+                  className="gap-1 font-bold"
+                  onClick={handleLoginWithGoogleClick}
+                >
+                  Google
+                </Button>
+              </DialogContent>
+            </Dialog>
+          </>
+        )}
       </div>
 
       <div className="flex flex-col gap-4 border-b border-solid p-5">
